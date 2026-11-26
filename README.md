@@ -26,13 +26,13 @@ Independent ReiserFS images, malformed items, invalid key ordering and dirty jou
 
 ## 7. Technical references and provenance
 
-- [Design and qualification reference (PDF)](docs/ReiserFS.pdf) — design-stage reference only, with [editable page source](docs/ReiserFS.pages); not an operational manual.
+- [Technical reference (PDF)](docs/ReiserFS.pdf) — original-format technical reference with historical appendices and [PDF stream source](docs/ReiserFS.pdfstreams); not an operational manual.
 
 - [Pinned central source baseline](https://github.com/Infiltrator-Projects/Filesystems/tree/101026021d9088d80b7f0f472d9061f0e2c688a3/native/filesystems/reiserfs)
 - [Native design](native/filesystems/reiserfs/DESIGN.md)
 - [Migration and qualification plan](MIGRATION_STATUS.md)
-- [Original-format reference source](docs/ReiserFS.pages) and [PDF](docs/ReiserFS.pdf)
+- [Original-format reference source](docs/ReiserFS.pdfstreams) and [PDF](docs/ReiserFS.pdf)
 - [Project philosophy](docs/PHILOSOPHY.md)
 - [Common ABI](https://github.com/Infiltrator-Projects/Libraries)
 
-Preserve inherited notices and licences on source extraction; new project-authored code uses GPL-3.0-or-later. The original-format reference is available here; installation of the PDF remains pending. Central code or test results are not evidence of an independent provider.
+Preserve inherited notices and licences on source extraction; new project-authored code uses GPL-3.0-or-later. The [technical reference](docs/ReiserFS-TECHNICAL-REFERENCE.md) expands original-format research. The PDF preserves both older documents as historical appendices; installation remains pending. Central code or test results are not evidence of an independent provider.
