@@ -37,19 +37,19 @@ BT /F2 22 Tf 43 784 Td (ReiserFS - technical reference) Tj ET
 1 1 1 rg BT /F2 10 Tf 43 811 Td (INFILTRATOR / FILESYSTEM ENGINEERING) Tj ET
 BT /F2 22 Tf 43 784 Td (ReiserFS - technical reference) Tj ET
 0.08 0.14 0.20 rg BT /F2 15 Tf 43 736 Td (2. Superblock and geometry) Tj ET
-0.08 0.14 0.20 rg BT /F3 10 Tf 43 706 Td (All on-disk multibyte integers are little-endian. Usual superblock starts at byte) Tj ET
-0.08 0.14 0.20 rg BT /F3 10 Tf 43 692 Td (65536; historical placement is byte 8192. Relative fields: total blocks 0, free) Tj ET
-0.08 0.14 0.20 rg BT /F3 10 Tf 43 678 Td (blocks 4, root block 8; eight journal parameter words from 12; 16-bit block size) Tj ET
-0.08 0.14 0.20 rg BT /F3 10 Tf 43 664 Td (44, object-ID map max/current sizes 46/48, unmount state 50; ten-byte magic at 52,) Tj ET
-0.08 0.14 0.20 rg BT /F3 10 Tf 43 650 Td (fsck state 62, hash code 64, tree height 68, bitmap count 70, version 72, reserved) Tj ET
-0.08 0.14 0.20 rg BT /F3 10 Tf 43 636 Td (journal blocks 74. The magic strings ReIsErFs, ReIsEr2Fs and ReIsEr3Fs identify) Tj ET
-0.08 0.14 0.20 rg BT /F3 10 Tf 43 622 Td (format/journal variants. The extended superblock has inode generation at 76, flags) Tj ET
-0.08 0.14 0.20 rg BT /F3 10 Tf 43 608 Td (80, UUID 84, label 100. Validate geometry and journal location; old placement and) Tj ET
-0.08 0.14 0.20 rg BT /F3 10 Tf 43 594 Td (bitmap layout require separate admission.) Tj ET
-0.08 0.14 0.20 rg BT /F3 10 Tf 43 570 Td (The retained header records block count, free blocks, root block, journal) Tj ET
-0.08 0.14 0.20 rg BT /F3 10 Tf 43 556 Td (start/size/magic and object-ID map limits. Admit the revision before interpreting) Tj ET
-0.08 0.14 0.20 rg BT /F3 10 Tf 43 542 Td (keyed tree items; Reiser4 is separate. Packed direct items, indirect block items) Tj ET
-0.08 0.14 0.20 rg BT /F3 10 Tf 43 528 Td (and tail packing must preserve their different ownership semantics.) Tj ET
+0.08 0.14 0.20 rg BT /F3 10 Tf 43 706 Td (All on-disk multibyte integers are little-endian. Usual superblock starts at) Tj ET
+0.08 0.14 0.20 rg BT /F3 10 Tf 43 692 Td (byte 65536; historical placement is byte 8192. Relative fields: total blocks 0,) Tj ET
+0.08 0.14 0.20 rg BT /F3 10 Tf 43 678 Td (free blocks 4, root block 8; eight journal parameter words from 12; 16-bit) Tj ET
+0.08 0.14 0.20 rg BT /F3 10 Tf 43 664 Td (block size 44, object-ID map max/current sizes 46/48, unmount state 50;) Tj ET
+0.08 0.14 0.20 rg BT /F3 10 Tf 43 650 Td (ten-byte magic at 52, fsck state 62, hash code 64, tree height 68, bitmap count) Tj ET
+0.08 0.14 0.20 rg BT /F3 10 Tf 43 636 Td (70, version 72, reserved journal blocks 74. The magic strings ReIsErFs,) Tj ET
+0.08 0.14 0.20 rg BT /F3 10 Tf 43 622 Td (ReIsEr2Fs and ReIsEr3Fs identify format/journal variants. The extended) Tj ET
+0.08 0.14 0.20 rg BT /F3 10 Tf 43 608 Td (superblock has inode generation at 76, flags 80, UUID 84, label 100. Validate) Tj ET
+0.08 0.14 0.20 rg BT /F3 10 Tf 43 594 Td (geometry and journal location; old placement and bitmap layout require separate) Tj ET
+0.08 0.14 0.20 rg BT /F3 10 Tf 43 580 Td (admission.) Tj ET
+0.08 0.14 0.20 rg BT /F3 10 Tf 43 556 Td (Admit the revision before interpreting keyed tree items. The Direct and) Tj ET
+0.08 0.14 0.20 rg BT /F3 10 Tf 43 542 Td (indirect payload mapping section distinguishes packed data from externally) Tj ET
+0.08 0.14 0.20 rg BT /F3 10 Tf 43 528 Td (allocated blocks.) Tj ET
 0.2 0.3 0.4 rg BT /F1 9 Tf 43 32 Td (Historical development and engineering reference | 3) Tj ET
 
 %%Page

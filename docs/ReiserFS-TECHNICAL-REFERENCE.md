@@ -8,7 +8,7 @@ ReiserFS, developed by Hans Reiser and Namesys, introduced a balanced-tree desig
 
 All on-disk multibyte integers are little-endian. Usual superblock starts at byte 65536; historical placement is byte 8192. Relative fields: total blocks 0, free blocks 4, root block 8; eight journal parameter words from 12; 16-bit block size 44, object-ID map max/current sizes 46/48, unmount state 50; ten-byte magic at 52, fsck state 62, hash code 64, tree height 68, bitmap count 70, version 72, reserved journal blocks 74. The magic strings ReIsErFs, ReIsEr2Fs and ReIsEr3Fs identify format/journal variants. The extended superblock has inode generation at 76, flags 80, UUID 84, label 100. Validate geometry and journal location; old placement and bitmap layout require separate admission.
 
-The retained header records block count, free blocks, root block, journal start/size/magic and object-ID map limits. Admit the revision before interpreting keyed tree items; Reiser4 is separate. Packed direct items, indirect block items and tail packing must preserve their different ownership semantics.
+Admit the revision before interpreting keyed tree items. The Direct and indirect payload mapping section distinguishes packed data from externally allocated blocks.
 
 ## Allocation bitmaps and object IDs
 
