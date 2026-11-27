@@ -22,3 +22,17 @@ jobs:
           make check
           make clean
           make CFLAGS="-O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer" check
+
+      - name: Independently format and qualify actual clean ReiserFS media
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y reiserfsprogs
+          for version in 3.5 3.6; do
+            truncate -s 64M "reiser-$version.img"
+            mkreiserfs -q -f -f -v "$version" "reiser-$version.img"
+            sha256sum "reiser-$version.img" > before.sha256
+            case "$version" in 3.5) variant=1;; 3.6) variant=2;; esac
+            build/test_reiserfs build/carrier/REISERFS.so "reiser-$version.img" "$variant"
+            build/test_reiserfs build/firmware/REISERFS.so "reiser-$version.img" "$variant"
+            sha256sum -c before.sha256
+          done

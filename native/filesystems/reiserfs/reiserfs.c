@@ -173,7 +173,8 @@ static int dir_item(const Volume *v,Key k,const uint8_t *p,uint32_t len,uint32_t
     uint32_t end=len;
     for(uint32_t i=0;i<aux;++i){
         const uint8_t *h=p+i*16;uint32_t off=u32(h),loc=u16(h+12),state=u16(h+14);
-        if((!i&&off!=k.off)||!off||off<=d->last||loc<aux*16||loc>=end||!u32(h+4)||!u32(h+8))return IFS_FS_CORRUPT;
+        if((!i&&off!=k.off)||!off||off<=d->last||loc<aux*16||loc>=end||!u32(h+8))return IFS_FS_CORRUPT;
+        if(!u32(h+4)&&!(off==2&&d->dir->dir==1&&d->dir->id==2&&u32(h+8)==1))return IFS_FS_CORRUPT;
         d->last=off;uint32_t size=end-loc;end=loc;
         if(state&1)return IFS_FS_UNSUPPORTED; /* stat data embedded in old name */
         while(size&&p[loc+size-1]==0)--size;

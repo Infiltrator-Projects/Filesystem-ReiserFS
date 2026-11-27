@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 enum { B=4096,N=256,MAX=B*N };
 static uint8_t disk[MAX],saved[MAX];static unsigned sector,allocs,fail;
 static void p16(uint8_t*p,uint32_t n){p[0]=n;p[1]=n>>8;}
@@ -57,6 +58,29 @@ static int rd(void*c,uint64_t off,void*out,uint32_t n)
 {(void)c;if(fail||off>sizeof disk||n>sizeof disk-off||off%sector||n%sector)return -1;memcpy(out,disk+off,n);return 0;}
 static void*alloc(void*c,size_t n){(void)c;void*p=malloc(n);if(p)++allocs;return p;}
 static void drop(void*c,void*p){(void)c;if(p){assert(allocs);--allocs;free(p);}}
+static int real_rd(void*c,uint64_t off,void*out,uint32_t n)
+{
+    FILE *f=c;if(off%sector||n%sector||off>INT64_MAX||fseek(f,(long)off,SEEK_SET))return -1;
+    return fread(out,1,n,f)==n?0:-1;
+}
+static int real_test(const IfsFsCoreOpsV2 *core,const char *path,unsigned want)
+{
+    FILE *f=fopen(path,"rb");assert(f);assert(!fseek(f,0,SEEK_END));long size=ftell(f);assert(size>0);
+    for(sector=512;sector<=4096;sector*=8){
+        IfsFsHostRuntimeV2 h={.abi_version=2,.structure_bytes=sizeof h,.capabilities=IFS_FS_HOST_READ_ONLY,
+           .volume_bytes=(uint64_t)size,.logical_sector_bytes=sector,.physical_sector_bytes=sector,
+           .maximum_transfer_bytes=4096,.context=f,.read_at=real_rd,.allocate=alloc,.release=drop};
+        uint32_t variant=0;int rc=core->probe(&h,&variant);
+        if(rc){fprintf(stderr,"real probe rc=%d sector=%u\n",rc,sector);return 1;}
+        assert(variant==want&&!allocs);
+        void *v=NULL;IfsFsVolumeInfoV2 i={.structure_bytes=sizeof i};assert(core->mount(&h,&v,&i)==0&&v);
+        char name[256];IfsFsEntryV2 e={.structure_bytes=sizeof e,.name=name,.name_capacity=sizeof name};
+        assert(core->stat(v,"/",&e)==0&&e.type==IFS_FS_ENTRY_DIRECTORY);
+        assert(core->directory_entry(v,"/",0,&e)==IFS_FS_END);
+        assert(core->unmount(v)==0&&!allocs);
+    }
+    assert(!fclose(f));puts("Independent mkreiserfs root and allocation geometry PASS");return 0;
+}
 int main(int argc,char**argv)
 {
     if(argc==4&&!strcmp(argv[1],"--emit")){
@@ -64,11 +88,12 @@ int main(int argc,char**argv)
         assert(fwrite(disk,1,sizeof disk,f)==sizeof disk);assert(fwrite(blk(33),1,B,p)==B);
         uint8_t z[B]={0};assert(fwrite(z,1,B,p)==B);assert(fwrite("tail123",1,7,p)==7);assert(!fclose(f)&&!fclose(p));return 0;
     }
-    assert(argc==2);void*lib=dlopen(argv[1],RTLD_NOW|RTLD_LOCAL);if(!lib){puts(dlerror());return 1;}
+    assert(argc==2||argc==4);void*lib=dlopen(argv[1],RTLD_NOW|RTLD_LOCAL);if(!lib){puts(dlerror());return 1;}
     IfsFsModuleApiEntryV2 entry;*(void**)(&entry)=dlsym(lib,IFS_FS_COMMON_EXPORT_V2);assert(entry);
     const IfsFsModuleApiV2*api=entry();assert(ifs_fs_api_v2_valid(api,"reiserfs"));
     const IfsFsCoreOpsV2*core=(const void*)ifs_fs_group_v2(api,IFS_FS_GROUP_CORE);
     const IfsFsMetadataOpsV2*meta=(const void*)ifs_fs_group_v2(api,IFS_FS_GROUP_METADATA);assert(core&&meta&&!core->write);
+    if(argc==4){int rc=real_test(core,argv[2],(unsigned)strtoul(argv[3],NULL,10));dlclose(lib);return rc;}
     for(unsigned ver=0;ver<2;++ver)for(sector=512;sector<=4096;sector*=8){
         fixture(ver);IfsFsHostRuntimeV2 h={.abi_version=2,.structure_bytes=sizeof(h),.capabilities=IFS_FS_HOST_READ_ONLY,
           .volume_bytes=sizeof disk,.logical_sector_bytes=sector,.physical_sector_bytes=sector,.maximum_transfer_bytes=B,
